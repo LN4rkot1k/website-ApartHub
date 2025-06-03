@@ -1,0 +1,117 @@
+<div class="admin-panel-container">
+    <h2>Добавление жилого комплекса</h2>
+
+    {{#if successMessage}}
+        <div class="alert-success">{{successMessage}}</div>
+    {{/if}}
+
+    <div class="complex-page-content">
+        <div class="complex-list">
+            <h4>Существующие комплексы</h4>
+            <ul>
+                {{#each complexes}}
+                    <li>
+                        <strong>{{complex_title}}</strong><br>
+                        Адрес: {{complex_address}}<br>
+                        Год постройки: {{construction_year}}<br>
+                        Тип дома: {{house_type}}<br>
+                        Класс дома: {{housing_class}}
+
+                        <form method="POST" action="/admin/delete-complex" style="margin-top:8px;">
+                        <input type="hidden" name="complex_id" value="{{complex_id}}">
+                        <button type="submit" class="delete-button">Удалить</button>
+                        </form>
+
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+
+        <div class="form-container">
+            <form action="/admin/add-complex" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="complex_title">Название комплекса</label>
+                    <input type="text" name="complex_title" required>
+                    <div class="form-error"></div>
+
+                </div>
+                <div class="form-group">
+                    <label for="complex_address">Адрес комплекса</label>
+                    <input type="text" name="complex_address" required>
+                    <div class="form-error"></div>
+
+                </div>
+                <div class="form-group">
+                    <label for="construction_year">Год постройки</label>
+                    <input type="number" name="construction_year" required>
+                    <div class="form-error"></div>
+
+                </div>
+                <div class="form-group">
+                    <label for="house_type">Тип дома</label>
+                    <input type="text" name="house_type" required>
+                </div>
+                <div class="form-group">
+                    <label for="housing_class">Класс дома</label>
+                    <input type="text" name="housing_class" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="complex_imageurls">Фотография комплекса:</label>
+                    <div class="custom-file-upload">
+                        <button type="button" id="customPhotoButton" class="btn btn-secondary">Загрузить фотографию</button>
+                        <span id="file-names">Файл не выбран</span>
+                        <input type="file" id="photos" name="complex_imageurls" multiple accept="image/jpeg,image/png,image/jpg" style="display:none;" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Добавить комплекс</button>
+                <button class="backBtn" id="backBtn">Вернуться назад</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    document.getElementById('backBtn').addEventListener('click', function(event) {
+        event.preventDefault();
+        window.location.href = '/adminProfile';
+    })
+
+    const photoInput = document.getElementById('photos');
+    const customPhotoButton = document.getElementById('customPhotoButton');
+    const fileNamesSpan = document.getElementById('file-names');
+
+    const MAX_FILE_SIZE_MB = 10;
+    const MAX_FILES = 1;
+
+    customPhotoButton.addEventListener('click', function () {
+        photoInput.click();
+    });
+
+    photoInput.addEventListener('change', function () {
+        const files = Array.from(photoInput.files);
+
+        if (files.length > MAX_FILES) {
+            alert(`Можно загрузить не более ${MAX_FILES} файла.`);
+            photoInput.value = '';
+            fileNamesSpan.textContent = 'Файл не выбран';
+            return;
+        }
+
+        const invalidFiles = files.filter(file => {
+            return !file.type.match(/^image\/(jpeg|png|jpg)$/) || file.size > MAX_FILE_SIZE_MB * 1024 * 1024;
+        });
+
+        if (invalidFiles.length > 0) {
+            alert(`Некоторые файлы не подходят. Разрешены только изображения JPEG/PNG/JPG до ${MAX_FILE_SIZE_MB}MB.`);
+            photoInput.value = '';
+            fileNamesSpan.textContent = 'Файл не выбран';
+            return;
+        }
+
+        const fileNames = files.map(f => f.name).join(', ');
+        fileNamesSpan.textContent = fileNames || 'Файл не выбран';
+    });
+</script>

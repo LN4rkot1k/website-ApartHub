@@ -1,0 +1,100 @@
+<div class="login-container">
+    <h2>Добавление администратора</h2>
+
+    <form id="add-admin-form" action="/admin/add-admin" method="POST">
+        <div class="form-group">
+            <label for="login">Логин</label>
+            <input type="text" id="login" name="login" required>
+            <div class="form-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required>
+            <div class="form-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="name">ФИО</label>
+            <input type="text" id="name" name="name" required>
+            <div class="form-error"></div>
+        </div>
+
+        <button type="submit" class="btn-login">Добавить администратора</button>
+        <button class="backBtn" id="backBtn">Вернуться назад</button>
+    </form>
+
+</div>
+
+
+{{#if successMessage}}
+<script>
+    alert('{{successMessage}}');
+</script>
+{{/if}}
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    document.getElementById('backBtn').addEventListener('click', function(event) {
+        event.preventDefault();
+        window.location.href = '/adminProfile';
+    });
+
+    const form = document.getElementById('add-admin-form');
+    const loginInput = document.getElementById('login');
+    const passwordInput = document.getElementById('password');
+    const nameInput = document.getElementById('name');
+
+    // Ограничение длины пароля
+    passwordInput.addEventListener('input', function () {
+        this.value = this.value.slice(0, 20);
+    });
+
+    function clearErrors() {
+        document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+    }
+
+    function createError(input, message) {
+        const errorDiv = input.parentElement.querySelector('.form-error');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+        }
+    }
+
+    form.addEventListener('submit', (e) => {
+        clearErrors();
+        let valid = true;
+
+        const login = loginInput.value.trim();
+        const password = passwordInput.value.trim();
+        const name = nameInput.value.trim();
+
+        const loginRegex = /^[a-zA-Z0-9_-]{3,}$/;
+        const nameRegex = /^[А-Яа-яЁё\s\-]+$/;
+
+        if (!loginRegex.test(login)) {
+            createError(loginInput, 'Логин: от 3 символов, только буквы, цифры, _ и -');
+            valid = false;
+        }
+
+        if (password.length < 5 || password.length > 20) {
+            createError(passwordInput, 'Пароль должен содержать от 5 до 20 символов.');
+            valid = false;
+        } else if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+            createError(passwordInput, 'Пароль должен содержать хотя бы одну букву и одну цифру.');
+            valid = false;
+        }
+
+        if (!nameRegex.test(name)) {
+            createError(nameInput, 'ФИО: только кириллица, пробелы и дефисы.');
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+

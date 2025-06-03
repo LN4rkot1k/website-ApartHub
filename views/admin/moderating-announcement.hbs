@@ -1,0 +1,91 @@
+<h1>Модерация объявлений</h1>
+
+<div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
+    <button id="show-unmoderated">Отобразить объявления для модерации</button>
+    <button id="show-moderated">Отобразить отмодерированные объявления</button>
+    <button id="backBtn">Назад в админ-панель</button>
+</div>
+
+
+<div id="tables-container">
+    <table id="unmoderated-table" style="width: 100%; border-collapse: collapse; display: none;">
+        <thead>
+            <tr>
+                <th>Адрес</th>
+                <th>Цена</th>
+                <th>Комнат</th>
+                <th>Статус</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each unmoderated}}
+            <tr>
+                <td>{{this.apart_address}}</td>
+                <td>{{this.apart_price}}</td>
+                <td>{{this.apart_rooms}}</td>
+                <td>{{this.status}}</td>
+                <td><a href="/admin/apartments/{{this.apart_id}}">Просмотр</a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <table id="moderated-table" style="width: 100%; border-collapse: collapse; display: none;">
+        <thead>
+            <tr>
+                <th>Адрес</th>
+                <th>Цена</th>
+                <th>Комнат</th>
+                <th>Статус</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each moderated}}
+            <tr>
+                <td>{{this.apart_address}}</td>
+                <td>{{this.apart_price}}</td>
+                <td>{{this.apart_rooms}}</td>
+                <td>{{this.status}}</td>
+                <td><a href="/admin/apartments/{{this.apart_id}}">Просмотр</a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<style>
+.viewButton {
+    color: #000000;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.viewButton:hover {
+    text-decoration: underline;
+}
+</style>
+
+<script>
+
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '/adminProfile';
+    })
+
+    const unmodTable = document.getElementById('unmoderated-table');
+    const modTable = document.getElementById('moderated-table');
+
+    document.getElementById('show-unmoderated').addEventListener('click', () => {
+        unmodTable.style.display = 'table';
+        modTable.style.display = 'none';
+    });
+
+    document.getElementById('show-moderated').addEventListener('click', () => {
+        modTable.style.display = 'table';
+        unmodTable.style.display = 'none';
+    });
+
+    // По умолчанию показываем таблицу с неотмодерированными
+    unmodTable.style.display = 'table';
+</script>

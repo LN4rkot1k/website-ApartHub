@@ -1,0 +1,121 @@
+<div class="register-container">
+    <h1>Редактирование профиля</h1>
+
+    {{#if error}}
+        <div class="error-message">
+            {{error}}
+        </div>
+    {{/if}}
+
+    <form action="/profile/update" method="POST">
+        <div class="form-group">
+            <label for="login">Логин</label>
+            <input type="text" id="login" name="login" value="{{user.login}}" minlength="5" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" minlength="5" id="password" name="password" placeholder="Оставьте пустым, чтобы не менять">
+        </div>
+
+        <div class="form-group">
+            <label for="name">ФИО</label>
+            <input type="text" id="name" name="name" value="{{user.name}}" minlength="2" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Номер телефона</label>
+            <input type="tel" id="phone_number" name="phone_number" value="{{user.phone_number}}" minlength="11" required>
+        </div>
+
+        <button type="submit" class="btn-register">Сохранить изменения</button>
+        <a href="/userProfile" class="btn-register cancel-btn">Отмена</a>
+    </form>
+</div>
+{{#if alert}}
+<script>
+    alert("{{alertMessage}}");
+</script>
+{{/if}}
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    const loginInput = document.getElementById('login');
+    const passwordInput = document.getElementById('password');
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone_number');
+
+    // Создаём контейнеры для ошибок
+    const createError = (input, message) => {
+        let error = input.parentElement.querySelector('.error-text');
+        if (!error) {
+            error = document.createElement('div');
+            error.classList.add('error-text');
+            error.style.color = 'red';
+            error.style.fontSize = '14px';
+            input.parentElement.appendChild(error);
+        }
+        error.textContent = message;
+    };
+
+    const clearError = (input) => {
+        const error = input.parentElement.querySelector('.error-text');
+        if (error) error.remove();
+    };
+
+    // Маски и ограничения в процессе ввода
+    loginInput.addEventListener('input', function () {
+        this.value = this.value.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 20);
+    });
+
+    passwordInput.addEventListener('input', function () {
+        this.value = this.value.slice(0, 20);
+    });
+
+    nameInput.addEventListener('input', function () {
+        this.value = this.value.replace(/[^А-Яа-яЁё\s-]/g, '').slice(0, 40);
+    });
+
+    phoneInput.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 11);
+    });
+
+    // Проверка при отправке формы
+    form.addEventListener('submit', function (e) {
+        let valid = true;
+
+        // Очистка ошибок
+        [loginInput, passwordInput, nameInput, phoneInput].forEach(clearError);
+
+        if (loginInput.value.length < 5) {
+            createError(loginInput, 'Логин должен содержать от 5 до 20 символов.');
+            valid = false;
+        }
+
+        if (passwordInput.value.length > 0 && passwordInput.value.length < 5) {
+            createError(passwordInput, 'Пароль должен содержать от 5 до 20 символов.');
+            valid = false;
+        }
+
+        if (phoneInput.value.length !== 11) {
+            createError(phoneInput, 'Номер телефона должен содержать ровно 11 цифр.');
+            valid = false;
+        }
+
+        if (nameInput.value.length < 2) {
+            createError(nameInput, 'ФИО должно содержать от 2 до 40 символов.');
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+
+
+

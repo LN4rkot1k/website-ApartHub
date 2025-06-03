@@ -1,0 +1,150 @@
+{{! Страница форма для регистрации пользователя }}
+<div class="register-container">
+    <h1>Регистрация</h1>
+
+    {{#if error}}
+        <div class="error-message">
+            {{error}}
+        </div>
+    {{/if}}
+
+    <form action="/register" method="POST">
+        <div class="form-group">
+            <label for="login">Логин</label>
+            <input type="text" id="login" name="login" placeholder="Введите свой логин" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+        </div>
+
+        <div class="form-group">
+            <label for="name">ФИО</label>
+            <input type="text" id="name" name="name" placeholder="Введите свое ФИО" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Номер телефона</label>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="Введите номер телефона" required>
+        </div>
+
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="agree" name="agree">
+            <label for="agree">
+                Я соглашаюсь с <a href="/privacy-policy" target="_blank">политикой конфиденциальности</a> и <a href="/data-processing-consent" target="_blank">обработкой персональных данных</a>
+            </label>
+        </div>
+
+
+        <button type="submit" class="btn-register" id="submitBtn" disabled>Зарегистрироваться</button>
+        <button class="backBtn" id="backBtn" type="button">Вернуться назад</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const form = document.querySelector('form');
+    const loginInput = document.getElementById('login');
+    const passwordInput = document.getElementById('password');
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone_number');
+    const checkbox = document.getElementById('agree');
+    const submitBtn = document.getElementById('submitBtn');
+
+    let consentError = document.querySelector('.consent-error');
+    if (!consentError) {
+        consentError = document.createElement('div');
+        consentError.classList.add('consent-error');
+        consentError.style.color = 'red';
+        consentError.style.fontSize = '14px';
+        consentError.style.marginTop = '8px';
+        form.appendChild(consentError);
+    }
+    consentError.textContent = ''; 
+
+    checkbox.addEventListener('change', function () {
+        submitBtn.disabled = !this.checked;
+        if (this.checked) {
+            consentError.textContent = '';
+        }
+    });
+
+    const createError = (input, message) => {
+        let error = input.parentElement.querySelector('.error-text');
+        if (!error) {
+            error = document.createElement('div');
+            error.classList.add('error-text');
+            error.style.color = 'red';
+            error.style.fontSize = '14px';
+            input.parentElement.appendChild(error);
+        }
+        error.textContent = message;
+    };
+
+    const clearError = (input) => {
+        const error = input.parentElement.querySelector('.error-text');
+        if (error) error.remove();
+    };
+
+    loginInput.addEventListener('input', function () {
+        this.value = this.value.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 20);
+    });
+
+    passwordInput.addEventListener('input', function () {
+        this.value = this.value.slice(0, 20);
+    });
+
+    nameInput.addEventListener('input', function () {
+        this.value = this.value.replace(/[^А-Яа-яЁё\s-]/g, '').slice(0, 40);
+    });
+
+    phoneInput.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 11);
+    });
+
+    form.addEventListener('submit', function (e) {
+        let valid = true;
+
+        [loginInput, passwordInput, nameInput, phoneInput].forEach(clearError);
+        consentError.textContent = '';
+
+        if (loginInput.value.length < 5) {
+            createError(loginInput, 'Логин должен содержать от 5 до 20 символов.');
+            valid = false;
+        }
+
+        if (passwordInput.value.length < 5) {
+            createError(passwordInput, 'Пароль должен содержать от 5 до 20 символов.');
+            valid = false;
+        }
+
+        if (phoneInput.value.length !== 11) {
+            createError(phoneInput, 'Номер телефона должен содержать ровно 11 цифр.');
+            valid = false;
+        }
+
+        if (nameInput.value.length < 2) {
+            createError(nameInput, 'ФИО должно содержать от 2 до 40 символов.');
+            valid = false;
+        }
+
+        if (!checkbox.checked) {
+            consentError.textContent = 'Вы должны согласиться с политикой конфиденциальности и обработкой данных.';
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', function(event) {
+        event.preventDefault();
+        window.location.href = '/';
+    });
+
+});
+</script>
+

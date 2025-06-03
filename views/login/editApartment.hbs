@@ -1,0 +1,194 @@
+<div class="content card-like">
+  <h4>Добро пожаловать, {{user.name}}!</h4>
+  <div id="edit-apartment-form">
+    <h4>Редактировать объявление</h4>
+    <form id="apartment-form" enctype="multipart/form-data" method="POST" action="/profile/apartments/{{apartment.apart_id}}/edit">
+      
+      <div class="form-group">
+        <label for="address">Адрес квартиры:</label>
+        <input type="text" class="form-control" id="address" name="address"
+               placeholder="Например: Челябинск, ул. Лесопарковая, д. 60"
+               title="Введите адрес в формате: Челябинск, ул. Лесопарковая д. 60"
+               required value="{{apartment.apart_address}}">
+      </div>
+
+      <div class="form-group">
+        <label for="complex">ЖК (если есть):</label>
+        <select class="form-control" id="complex" name="complex_id">
+        <option value="">Выберите ЖК</option>
+        </select>
+
+      </div>
+
+      <div class="form-group">
+        <label for="floor">Этаж квартиры:</label>
+        <input type="number" class="form-control" id="floor" name="floor"
+               placeholder="Например: 5"
+               required value="{{apartment.apart_floor}}">
+      </div>
+
+      <div class="form-group">
+        <label for="rooms">Количество комнат:</label>
+        <input type="number" class="form-control" id="rooms" name="rooms"
+               placeholder="Например: 2"
+               required value="{{apartment.apart_rooms}}">
+      </div>
+
+      <div class="form-group">
+        <label for="area">Площадь квартиры:</label>
+        <input type="number" class="form-control" id="area" name="area"
+               placeholder="Максимальная площадь: 200 м²"
+               required value="{{apartment.apart_square}}">
+      </div>
+
+      <div class="form-group">
+        <label for="photos">Фотографии квартиры:</label>
+        <div class="custom-file-upload">
+          <button type="button" id="customPhotoButton" class="btn btn-secondary">Загрузить фотографии</button>
+          <span id="file-names">Файлы не выбраны</span>
+          <input type="file" id="photos" name="image_urls" multiple accept="image/jpeg,image/png, image/jpg" style="display: none;" required>
+        </div>
+        <small class="form-text text-muted">Выберите несколько фотографий квартиры.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Цена квартиры:</label>
+        <input type="number" class="form-control" id="price" name="price"
+               placeholder="Например: 1000000"
+               required value="{{apartment.apart_price}}">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Описание квартиры:</label>
+        <textarea class="form-control" id="description" name="description" rows="10"
+                  placeholder="Введите подробное описание квартиры (не более 1000 символов)"
+                  required>{{apartment.apart_description}}</textarea>
+        <small id="descriptionError" class="text-danger" style="display:none;">
+          Описание должно содержать от 20 до 1000 символов
+        </small>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+      <button type="button" class="btn btn-secondary" id="cancel-button">Отмена</button>
+    </form>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    document.getElementById('cancel-button').addEventListener('click', function(event) {
+      event.preventDefault();
+      window.location.href = '/userProfile';
+    });
+
+    const addressInput = document.getElementById('address');
+    addressInput.addEventListener('input', function () {
+        this.value = this.value.replace(/[^А-Яа-яЁёA-Za-z0-9\s.,-]/g, '');
+    });
+
+    const floorInput = document.getElementById('floor');
+    floorInput.addEventListener('input', function () {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 2) val = val.slice(0, 2);
+        this.value = val;
+    });
+
+    const roomsInput = document.getElementById('rooms');
+    roomsInput.addEventListener('input', function () {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 2) val = val.slice(0, 2);
+        this.value = val;
+    });
+
+    const areaInput = document.getElementById('area');
+    areaInput.addEventListener('input', function () {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 3) val = val.slice(0, 3);
+        if (parseInt(val) > 200) val = '200';
+        this.value = val;
+    });
+
+    const priceInput = document.getElementById('price');
+    priceInput.addEventListener('input', function () {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 9) val = val.slice(0, 9);
+        if (parseInt(val) > 1000000000) val = '1000000000';
+        this.value = val;
+    });
+
+    const descriptionInput = document.getElementById('description');
+    const descriptionError = document.getElementById('descriptionError');
+    descriptionInput.addEventListener('input', function () {
+        const length = descriptionInput.value.trim().length;
+        if (length < 20 || length > 1000) {
+            descriptionInput.classList.add('is-invalid');
+            descriptionError.style.display = 'block';
+        } else {
+            descriptionInput.classList.remove('is-invalid');
+            descriptionError.style.display = 'none';
+        }
+    });
+
+    const photoInput = document.getElementById('photos');
+    const customPhotoButton = document.getElementById('customPhotoButton');
+    const fileNamesSpan = document.getElementById('file-names');
+
+    const MAX_FILE_SIZE_MB = 10;
+    const MAX_FILES = 5;
+
+    customPhotoButton?.addEventListener('click', function () {
+        photoInput.click();
+    });
+
+    photoInput?.addEventListener('change', function () {
+        const files = Array.from(photoInput.files);
+
+        if (files.length > MAX_FILES) {
+            alert(`Можно загрузить не более ${MAX_FILES} файлов.`);
+            photoInput.value = '';
+            fileNamesSpan.textContent = 'Файлы не выбраны';
+            return;
+        }
+
+        const invalidFiles = files.filter(file =>
+            !file.type.match(/^image\/(jpeg|png|jpg)$/) || file.size > MAX_FILE_SIZE_MB * 1024 * 1024
+        );
+
+        if (invalidFiles.length > 0) {
+            alert(`Некоторые файлы не подходят. Разрешены только изображения JPEG/PNG/JPG до ${MAX_FILE_SIZE_MB}MB.`);
+            photoInput.value = '';
+            fileNamesSpan.textContent = 'Файлы не выбраны';
+            return;
+        }
+
+        fileNamesSpan.textContent = files.map(f => f.name).join(', ') || 'Файлы не выбраны';
+    });
+
+
+
+    const select = document.getElementById('complex');
+    const selectedComplexId = '{{apartment.complex_id}}';
+
+    fetch('/profile/complexes')
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(complex => {
+                const option = document.createElement('option');
+                option.value = complex.complex_id;
+                option.textContent = complex.complex_title;
+                if (complex.complex_id == selectedComplexId) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Ошибка при загрузке ЖК:', error));
+});
+</script>
+

@@ -1,0 +1,102 @@
+<div class="edit-container">
+    <h2>Редактирование объявления</h2>
+    <form action="/admin/apartments/{{apartment.apart_id}}/edit" method="POST">
+        <div class="form-group">
+            <label for="address">Адрес квартиры</label>
+            <input type="text" id="address" name="address" class="form-control" value="{{apartment.apart_address}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="floor">Этаж квартиры</label>
+            <input type="number" id="floor" name="floor" class="form-control" value="{{apartment.apart_floor}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="rooms">Количество комнат</label>
+            <input type="number" id="rooms" name="rooms" class="form-control" value="{{apartment.apart_rooms}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="area">Площадь квартиры</label>
+            <input type="number" id="area" name="area" class="form-control" value="{{apartment.apart_square}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Цена квартиры</label>
+            <input type="number" id="price" name="price" class="form-control" value="{{apartment.apart_price}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Описание квартиры</label>
+            <textarea id="description" name="description" class="form-control" rows="6" required>{{apartment.apart_description}}</textarea>
+            <div id="descriptionError" class="text-danger mt-1" style="display:none;">Описание должно быть от 20 до 1000 символов</div>
+
+        </div>
+
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="status" name="status" {{#if apartment.status}}checked{{/if}}>
+            <label class="form-check-label" for="status">Подтверждено</label>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="/admin/moderating-announcement" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const addressInput = document.getElementById('address');
+    addressInput.addEventListener('input', function() {
+        this.value = this.value.replace(/[^А-Яа-яЁёA-Za-z0-9\s.,-]/g, '');
+    });
+
+    const floorInput = document.getElementById('floor');
+    floorInput.addEventListener('input', function() {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 2) val = val.slice(0, 2);
+        this.value = val;
+    });
+
+    const roomsInput = document.getElementById('rooms');
+    roomsInput.addEventListener('input', function() {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 2) val = val.slice(0, 2);
+        this.value = val;
+    });
+
+    const areaInput = document.getElementById('area');
+    areaInput.addEventListener('input', function() {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 3) val = val.slice(0, 3);
+        if (parseInt(val) > 200) val = '200';
+        this.value = val;
+    });
+
+    const priceInput = document.getElementById('price');
+    priceInput.addEventListener('input', function() {
+        let val = this.value.replace(/\D/g, '');
+        val = val.replace(/^0+/, '');
+        if (val.length > 9) val = val.slice(0, 9);
+        if (parseInt(val) > 1000000000) val = '1000000000';
+        this.value = val;
+    });
+
+    const descriptionInput = document.getElementById('description');
+    const descriptionError = document.getElementById('descriptionError');
+    descriptionInput.addEventListener('input', function() {
+        const length = descriptionInput.value.trim().length;
+        if (length < 20 || length > 1000) {
+            descriptionInput.classList.add('is-invalid');
+            descriptionError.style.display = 'block';
+        } else {
+            descriptionInput.classList.remove('is-invalid');
+            descriptionError.style.display = 'none';
+        }
+    });
+});
+</script>

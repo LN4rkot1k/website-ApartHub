@@ -1,0 +1,26 @@
+<header class="custom-header py-3">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-6 col-md-8 d-flex gap-3">
+                <a href="/apartments" class="btn btn-outline-dark btn-hover-purple">Квартиры</a>
+                <a href="/#about_service" class="btn btn-outline-dark btn-hover-purple">О платформе</a>
+                <a href="/#contacts" class="btn btn-outline-dark btn-hover-purple">Контакты</a>
+            </div>
+
+            <div class="col-6 col-md-4 text-end">
+            {{#if isAuthenticated}}
+                {{#if isAdmin}}
+                <a href="/adminProfile" class="btn btn-outline-dark btn-hover-purple button-gap">Личный кабинет</a>
+                {{else}}
+                <a href="/userProfile" class="btn btn-outline-dark btn-hover-purple button-gap">Личный кабинет</a>
+                {{/if}}
+                <a href="/logout" class="btn btn-danger btn-hover-purple button-gap">Выйти</a>
+            {{else}}
+                <a href="/login" class="btn btn-outline-dark btn-hover-purple button-gap">Войти</a>
+                <a href="/register" class="btn btn-primary btn-hover-purple button-gap">Зарегистрироваться</a>
+            {{/if}}
+            </div>
+        </div>
+    </div>
+</header>
+

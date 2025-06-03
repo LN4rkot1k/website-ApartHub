@@ -1,0 +1,769 @@
+body {
+    font-family: "Roboto", sans-serif;
+}
+
+
+@media (max-width: 768px) {
+    .d-flex.gap-3 {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .text-end {
+        text-align: center !important;
+        margin-top: 10px;
+    }
+}
+
+
+.custom-header {
+    background-color: #000000;
+    padding: 15px 0;
+    position: relative;
+}
+
+
+.custom-header .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+
+
+.custom-header .btn-outline-dark {
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border: 1px solid #ffffff;
+}
+
+
+.btn-outline-dark.btn-hover-purple:hover {
+    background-color: #500072;
+    border-color: #500072;
+    color: white;
+    transition: 0.3s;
+}
+
+.custom-hero-button {
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-hero-button:hover {
+    background-color: #500072;
+}
+
+.custom-hero-button:active,
+.custom-hero-button:focus {
+    background-color: #6f42c1;
+    outline: none;
+    box-shadow: none;
+}
+
+
+.custom-header .btn-primary {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+}
+
+.custom-header .btn-primary:hover {
+    background-color: #500072;
+    border-color: #500072;
+    color: white;
+    transition: 0.3s;
+}
+
+
+.hero-section {
+    width: 100%;
+}
+
+
+.hero-container {
+    position: relative;
+    width: 100%;
+    height: 700px;
+    overflow: hidden;
+}
+
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+
+.hero-logo {
+    width: 250px;
+    margin-bottom: 15px;
+}
+
+
+.hero-slogan {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 60px;
+}
+
+
+.carousel-container {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+/* Контейнер карусели */
+.owl-carousel {
+    display: flex;
+    justify-content: center;
+}
+
+.owl-carousel .item {
+    margin: 0 30px;
+}
+
+.simple-center-carousel {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.simple-center-carousel .item {
+  flex: 0 0 auto;
+}
+
+
+.item .apartment-card {
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+    margin-bottom: 7px;
+    margin-top: 7px;
+}    
+
+.item .apartment-card:hover {
+    transform: scale(1.01);
+    border: 0;
+}
+
+.apartment-address {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.item .apartment-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.item .apartment-image {
+    margin-bottom: 5px;
+}
+
+.item .apartment-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Заголовки и текст в карточке */
+
+
+.item .apartment-info h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.item .apartment-info h4 {
+    margin-bottom: 0;
+}
+
+.item .apartment-info p {
+    font-size: 1rem;
+    margin: 2px 0;
+    color: #333;
+    flex-shrink: 0;
+}
+
+.apartment-extra-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: auto;
+}
+
+/* Кнопки управления каруселью */
+.carousel-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 15px;
+    padding-right: 65px;
+    position: relative;
+}
+
+.carousel-controls h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #000000;
+    text-align: center;
+}
+
+.carousel-controls button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #21025c;
+    color: white;
+    border: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.carousel-controls button:hover {
+    background-color: #6704e8;
+}
+
+.carousel-prev ::before {
+    content: "\f104";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+.carousel-next ::before {
+    content: "\f105";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+
+@media (max-width: 1024px) {
+    .item .apartment-card {
+        width: calc(33.333% - 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .item .apartment-card {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .item .apartment-card {
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+/*Жилые комплексы*/
+.residential-complexes {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.complex-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.complex-card {
+    text-decoration: none;
+    color: inherit;
+    width: 250px;
+    height: 410px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.2s ease-in-out;
+}
+
+.complex-card:hover {
+    transform: scale(1.05);
+}
+
+.complex-card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.complex-name {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    max-height: 50px;
+    overflow: hidden;
+}
+
+.complex-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.complex-address {
+    font-size: 15px;
+    text-align: center;
+    max-height: 50px;
+    overflow: hidden;
+}
+
+.complex-year {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+
+
+@media (max-width: 1024px) {
+    .complex-card {
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .complex-card {
+        width: 180px;
+    }
+}
+
+
+/*Надежность*/
+
+.flexible-blocks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 40px 20px;
+    justify-content: center;
+}
+
+
+.first-two-blocks {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Стиль для блоков с картинкой и текстом */
+.reliability-block,
+.mortgage-calculator-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    position: relative;
+    min-height: 320px;
+}
+
+/* Блок надежности */
+.reliability-block {
+    flex-direction: column;
+}
+
+/* Блок калькулятора ипотеки */
+.mortgage-calculator-block {
+    flex-direction: column;
+}
+
+
+.block-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Текст внутри блоков */
+.block-text h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.block-text p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+
+.button-container {
+    display: flex;
+    align-items: flex-start;
+    margin-top: auto;
+}
+
+/* Кнопки */
+.btn-reliability,
+.btn-calculate,
+.btn-about {
+    background-color: #6f42c1;
+    border: none;
+    padding: 12px 30px;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-reliability:hover,
+.btn-calculate:hover,
+.btn-about:hover {
+    background-color: #2d1854;
+}
+
+
+
+/*Блок новостей*/
+.about-hub {
+    padding: 60px 0;
+}
+
+.about-box {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.about-box.visible {
+    opacity: 1;
+}
+
+.about-box .overlay {
+    width: 100%;
+    height: 150px;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    color: white;
+    text-align: center;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.about-box h3 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.about-box p {
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+
+@media (max-width: 768px) {
+    .about-box {
+        height: 300px;
+    }
+
+    .about-box .overlay {
+        height: 100px;
+    }
+
+    .about-box h3 {
+        font-size: 1.5rem;
+    }
+
+    .about-box p {
+        font-size: 1rem;
+    }
+}
+
+.reliability-block,
+.mortgage-calculator-block {
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+
+
+/* Блок о нашей платформе */
+.about-service-section {
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+}
+
+.about-service-block {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.about-service-block h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.about-service-block p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+
+@media (max-width: 768px) {
+    .first-two-blocks {
+        flex-direction: column;
+    }
+
+    .block-image {
+        margin-left: 0;
+        margin-bottom: 15px;
+    }
+
+    .reliability-block,
+    .mortgage-calculator-block {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+.site-footer {
+    background-color: #2d2d2d;
+    color: #fff;
+    padding: 40px 20px;
+    font-size: 1rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Верхняя часть футера */
+.footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-column h4 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.footer-column p {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 10px;
+}
+
+.footer-column ul li a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.footer-column ul li a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Социальные сети */
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s;
+}
+
+.social-icon img:hover {
+    transform: scale(1.1);
+}
+
+/* Нижняя часть футера */
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.copyright {
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+.legal-links {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    padding: 0;
+}
+
+.legal-links li a {
+    color: #fff;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    text-decoration: none;
+}
+
+.legal-links li a:hover {
+    opacity: 1;
+}
+
+
+@media (max-width: 768px) {
+    .footer-top {
+        flex-direction: column;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .social-links {
+        margin-bottom: 15px;
+    }
+}
+
+
+
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1 0 auto;
+}
+
+.site-footer {
+  flex-shrink: 0;
+}
+
+
+.button-gap {
+    margin: 0 6px;
+}

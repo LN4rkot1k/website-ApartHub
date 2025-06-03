@@ -1,0 +1,198 @@
+<div class="apartment-detail-container">
+
+    <div class="apartment-detail-page">
+
+        <h3>Продаётся {{apartment.apart_rooms}}-к. квартира, {{apartment.apart_square}} м², {{apartment.apart_floor}} эт.</h3>
+        <h5>{{apartment.apart_address}}</h5>
+
+        <div class="apartment-gallery">
+            {{#if apartment.apart_imageurls}}
+                <div class="main-image-container">
+                    {{#each apartment.apart_imageurls}}
+                        <img src="{{this}}" class="carousel-image{{#if @first}} active{{/if}}" />
+                    {{/each}}
+                </div>
+
+                <div class="carousel-thumbnails">
+                    {{#each apartment.apart_imageurls}}
+                        <img src="{{this}}" class="carousel-thumb{{#if @first}} active-thumb{{/if}}" data-index="{{@index}}" />
+                    {{/each}}
+                </div>
+            {{else}}
+                <p>Фотографии квартиры отсутствуют</p>
+            {{/if}}
+        </div>
+
+
+
+        <div class="apartment-info">
+            <div class="info-columns">
+                <div class="info-section">
+                    <h3><strong>О квартире</strong></h3>
+                    <p><strong>Адрес:</strong> {{apartment.apart_address}}</p>
+                    <p><strong>Площадь:</strong> {{apartment.apart_square}} м²</p>
+                    <p><strong>Этаж:</strong> {{apartment.apart_floor}}</p>
+                    <p><strong>Количество комнат:</strong> {{apartment.apart_rooms}}</p>
+                </div>
+
+                {{#if complex}}
+                <div class="info-section">
+                    <h3><strong>О жилом комплексе</strong></h3>
+                    <p><strong>Тип дома:</strong> {{complex.house_type}}</p>
+                    <p><strong>Класс дома:</strong> {{complex.housing_class}}</p>
+                    <p><strong>Год постройки:</strong> {{complex.construction_year}}</p>
+                    <p><strong>Название:</strong> {{complex.complex_title}}</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+
+        <div class="apartment-description">
+            <h3><strong>Описание</strong></h3>
+            <p>{{apartment.apart_description}}</p>
+        </div>
+
+        {{#if mapCoordinates}}
+            <div id="map-section" class="map-container">
+                <h3><strong>Расположение на карте</strong></h3>
+                <div id="map" style="width:100%; height:400px"></div>
+                <script type="text/javascript" src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+                <script type="text/javascript">
+                    ymaps.ready(function () {
+                        var myMap = new ymaps.Map("map", {
+                            center: [{{mapCoordinates.latitude}}, {{mapCoordinates.longitude}}],
+                            zoom: 15
+                        });
+
+                        var myPlacemark = new ymaps.Placemark([{{mapCoordinates.latitude}}, {{mapCoordinates.longitude}}], {
+                            balloonContent: '{{apartment.apart_address}}'
+                        });
+
+                        myMap.geoObjects.add(myPlacemark);
+                    });
+                </script>
+            </div>
+        {{else}}
+            <p>Карта для этого объекта не доступна.</p>
+        {{/if}}
+
+    </div>
+
+    <div class="apartment-price-sidebar">
+        <h2>{{formatPrice apartment.apart_price}} ₽</h2>
+        {{#if isAuthenticated}}
+        <button class="show-contact-button" data-user-id="{{apartment.user_id}}">Показать контакты</button>
+        <button class="backBtn" id="backBtn">Вернуться назад</button>
+
+        {{else}}
+        <button class="unauth-contact-button">Показать контакты</button>
+        <button class="backBtn" id="backBtn">Вернуться назад</button>
+        {{/if}}
+    </div>
+</div>
+
+
+<div id="contactModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h4>Контактные данные</h4>
+        <p><strong>Имя:</strong> <span id="contact-name"></span></p>
+
+        <p><strong>Позвонить:</strong> <a href="#" id="contact-phone-call" class="contact-link" target="_blank">Номер</a></p>
+        <p><strong>Telegram:</strong> <a href="#" id="contact-telegram" class="contact-link" target="_blank">Открыть</a></p>
+        <p><strong>WhatsApp:</strong> <a href="#" id="contact-whatsapp" class="contact-link" target="_blank">Открыть</a></p>
+    </div>
+</div>
+
+<div id="authRequiredModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-btn close-auth-btn">&times;</span>
+    <h4>Необходима авторизация</h4>
+    <p>Для просмотра контактных данных необходима авторизация</p>
+  </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Карусель
+        const mainImages = document.querySelectorAll(".carousel-image");
+        const thumbs = document.querySelectorAll(".carousel-thumb");
+
+        thumbs.forEach((thumb, index) => {
+            thumb.addEventListener("click", () => {
+                mainImages.forEach(img => img.classList.remove("active"));
+                thumbs.forEach(t => t.classList.remove("active-thumb"));
+
+                mainImages[index].classList.add("active");
+                thumb.classList.add("active-thumb");
+            });
+        });
+
+        // Модальное окно
+    const contactModal = document.getElementById("contactModal");
+    const authRequiredModal = document.getElementById("authRequiredModal");
+
+    const contactName = document.getElementById("contact-name");
+    const contactPhoneCall = document.getElementById("contact-phone-call");
+    const telegramLink = document.getElementById("contact-telegram");
+    const whatsappLink = document.getElementById("contact-whatsapp");
+
+    const closeBtns = document.querySelectorAll(".close-btn");
+
+    const showContactBtn = document.querySelector(".show-contact-button");
+    if (showContactBtn) {
+        showContactBtn.addEventListener("click", async function () {
+            const userId = this.dataset.userId;
+            if (!userId) return; 
+
+            try {
+                const response = await fetch(`/api/user/${userId}`);
+                if (!response.ok) throw new Error("Ошибка при получении данных");
+
+                const data = await response.json();
+                contactName.textContent = data.name;
+
+                const phone = data.phone_number.replace(/\s+/g, '');
+
+                contactPhoneCall.href = `tel:${phone}`;
+                contactPhoneCall.textContent = phone;
+
+                telegramLink.href = `https://t.me/${phone.replace(/^\+/, '')}`;
+                whatsappLink.href = `https://wa.me/${phone.replace(/^\+/, '')}`;
+
+                contactModal.classList.remove("hidden");
+                contactModal.classList.add("show");
+            } catch (err) {
+                alert("Не удалось получить контактные данные.");
+                console.error(err);
+            }
+        });
+    }
+
+    const unauthBtn = document.querySelector(".unauth-contact-button");
+    if (unauthBtn) {
+        unauthBtn.addEventListener("click", function () {
+            authRequiredModal.classList.remove("hidden");
+            authRequiredModal.classList.add("show");
+        });
+    }
+
+    closeBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            contactModal.classList.remove("show");
+            contactModal.classList.add("hidden");
+
+            authRequiredModal.classList.remove("show");
+            authRequiredModal.classList.add("hidden");
+        });
+    });
+    });
+
+
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.history.go(-1);
+    });
+</script>
+
+

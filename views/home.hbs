@@ -1,0 +1,165 @@
+<section class="hero-section">
+    <div class="hero-container">
+        <img src="/images/testedimage/logo5.jpg" alt="Главное изображение" class="hero-image">
+
+        <div class="hero-overlay">
+            <img src="/images/apart-logo.png" alt="ApartHub Logo" class="hero-logo">
+            <h1 class="hero-slogan">Если недвижимость, то ApartHub</h1>
+            <a href="/apartments" class="custom-hero-button">Начать поиск</a>
+        </div>
+    </div>
+</section>
+
+
+
+<div class="carousel-container">
+    <div class="carousel-controls">
+        <h2>Наши предложения</h2>
+        <button class="carousel-prev"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="carousel-next"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="owl-carousel">
+        {{#each apartments}}
+        <div class="item">
+            <div class="apartment-card">
+                <img class="apartment-image" src="{{this.apart_imageurls.[0]}}" alt="Квартира">
+
+                <div class="apartment-info">
+                    <h4>{{formatPrice this.apart_price}} ₽</h4>
+                    <h5>{{this.apart_rooms}}-комнатная квартира</h5>
+
+                    <div class="apartment-extra-info">
+                        <p><strong>Площадь: </strong>{{this.apart_square}} м²</p>
+                        <p><strong>Этаж: </strong>{{this.apart_floor}}</p>
+                        <p class="apartment-address">{{this.apart_address}}</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+
+<section id="residential_complexes" class="residential-complexes">
+    <div class="container">
+        <h2 class="text-center mb-4">Жилые комплексы</h2>
+
+        <div class="complex-list">
+            {{#each complexes}}
+            <a href="/apartments?complex_id={{this.complex_id}}" class="complex-card">
+                <img src="{{this.complex_imageurls.[0]}}" alt="">
+                <p class="complex-name">{{this.complex_title}}</p>
+                <div class="complex-info">
+                    <p class="complex-address">{{this.complex_address}}</p>
+                    <p class="complex-year">Сдан в {{this.construction_year}} году.</p>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+
+<section class="flexible-blocks">
+    <div class="first-two-blocks">
+
+        <div class="reliability-block">
+            <img src="/images/trust-icon.png" alt="Надежность" class="block-image">
+            <div class="block-text">
+                <h3>Покупка недвижимости без лишних сложностей</h3>
+                <p>Никаких посредников, скрытых комиссий и запутанных условий.
+                    Мы просто даем вам удобную платформу, где продавцы и покупатели находят друг друга напрямую.
+                    Выбирайте, сравнивайте и находите идеальный вариант — легко и без лишних шагов.</p>
+            </div>
+            <div class="button-container">
+                <a href="/apartments" class="btn-reliability">Наши квартиры</a>
+            </div>
+        </div>
+
+
+        <div class="mortgage-calculator-block">
+            <img src="/images/mortgage-icon.png" alt="Ипотека" class="block-image">
+            <div class="block-text">
+                <h3>Собственная квартира – это проще, чем кажется</h3>
+                <p>Ипотека – удобный инструмент, который позволяет вам приобрести жилье без многолетних накоплений. Рассчитайте условия и выберите оптимальный вариант для себя.</p>
+            </div>
+            <div class="button-container">
+                <a href="/mortgage-calculator" class="btn-calculate">Калькулятор ипотеки</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{{!Блок новостей}}
+<section class="about-hub">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="about-box" style="background-image: url('/images/orderApart.jpg');">
+                    <div class="overlay">
+                        <h3>🏠 Прямые сделки</h3>
+                        <p>Мы убрали всех посредников, чтобы вы могли покупать и продавать квартиры напрямую, без скрытых комиссий и лишних наценок.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="about-box" style="background-image: url('/images/happy-clients.avif');">
+                    <div class="overlay">
+                        <h3>😊 Довольные клиенты</h3>
+                        <p>Тысячи покупателей и продавцов уже нашли друг друга на нашей платформе, совершив выгодные сделки.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="about-box" style="background-image: url('/images/graphUp.jpg');">
+                    <div class="overlay">
+                        <h3>📈 Опыт и развитие</h3>
+                        <p>Мы создаем современную платформу, которая делает покупку и продажу недвижимости удобнее, быстрее и прозрачнее.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="about-box" style="background-image: url('/images/homeFind.jpg');">
+                    <div class="overlay">
+                        <h3>🔍 Комфорт и удобство</h3>
+                        <p>Фильтры и автоматизированные инструменты позволяют легко найти идеальную квартиру.</p>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+</section>
+
+
+
+
+{{!Блок о нашей платформе}}
+<section class="about-service-section">
+    <div id="about_service" class="about-service-block">
+        <h3 class="text-center mb-4">О нашей платформе</h3>
+        <p>
+            Наш сайт – это современная платформа для продажи и покупки недвижимости. Мы создаём удобное пространство, 
+            где продавцы могут легко разместить свои объявления, а покупатели – найти идеальный вариант жилья.
+        </p>
+        <p>
+            У нас вы найдёте квартиры от владельцев, а удобный интерфейс и система фильтров 
+            помогут быстро подобрать подходящие варианты. Мы не занимаемся посредничеством – все сделки заключаются напрямую 
+            между продавцами и покупателями.
+        </p>
+        <p>
+            Покупка недвижимости – это важное решение, и мы стремимся сделать процесс поиска комфортным и прозрачным. 
+            Оставайтесь с нами и находите лучшие предложения на рынке!
+        </p>
+    </div>
+</section>

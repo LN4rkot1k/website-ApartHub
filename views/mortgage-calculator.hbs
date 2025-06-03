@@ -1,0 +1,138 @@
+<div class="mortgage-container">
+    <div class="mortgage-inputs">
+        <h2>Ипотечный калькулятор</h2>
+        <p>Рассчитайте ежемесячный платёж, сумму переплаты и общую сумму выплат по ипотеке. Просто заполните поля и нажмите "Рассчитать".</p>
+        <form id="mortgage-form">
+            <label for="price">Стоимость квартиры (₽):</label>
+            <input type="number" id="price" required>
+
+            <label for="downpayment">Первоначальный взнос (₽):</label>
+            <input type="number" id="downpayment" required>
+
+            <label for="rate">Процентная ставка (% годовых):</label>
+            <input type="number" id="rate" step="0.1" required>
+
+            <label for="years">Срок кредита (лет):</label>
+            <input type="number" id="years" required>
+
+            <button type="submit">Рассчитать</button>
+            <a href="/" class="calculator-back-button">Вернуться назад</a>
+        </form>
+    </div>
+
+    <div class="mortgage-results">
+        <h2>Результаты расчёта</h2>
+        <p><strong>Ежемесячный платёж:</strong> <span id="monthly-payment">–</span></p>
+        <p><strong>Сумма переплаты:</strong> <span id="overpayment">–</span></p>
+        <p><strong>Общая сумма выплат:</strong> <span id="total-payment">–</span></p>
+
+        <div class="mortgage-chart">
+            <h3>Итоги ипотечного расчёта</h3>
+            <canvas id="paymentChart" width="100%" height="300"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script>
+    document.getElementById('mortgage-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const price = parseFloat(document.getElementById('price').value);
+        const downpayment = parseFloat(document.getElementById('downpayment').value);
+        const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
+        const years = parseFloat(document.getElementById('years').value);
+        const months = years * 12;
+        const loanAmount = price - downpayment;
+
+        const monthly = (loanAmount * rate) / (1 - Math.pow(1 + rate, -months));
+        const total = monthly * months;
+        const overpayment = total - loanAmount;
+
+        document.getElementById('monthly-payment').textContent = monthly.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
+        document.getElementById('overpayment').textContent = overpayment.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
+        document.getElementById('total-payment').textContent = total.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
+
+
+        const labels = ['Основной долг', 'Сумма переплаты', 'Общая сумма выплат'];
+        const data = [loanAmount, overpayment, total];
+        const colors = ['#6f42c1', '#91017b', '#4b0299'];
+
+        // Удалим предыдущий график
+        if (window.myChart) {
+            window.myChart.destroy();
+        }
+
+        const ctx = document.getElementById('paymentChart').getContext('2d');
+        window.myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '',
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: colors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            generateLabels: function(chart) {
+                                const dataset = chart.data.datasets[0];
+                                return chart.data.labels.map((label, index) => {
+                                    const value = dataset.data[index];
+                                    return {
+                                        text: `${label}: ${value.toLocaleString('ru-RU')} ₽`,
+                                        fillStyle: dataset.backgroundColor[index],
+                                        strokeStyle: dataset.borderColor[index],
+                                        lineWidth: 1,
+                                    };
+                                });
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.raw.toLocaleString('ru-RU') + ' ₽';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: 'black',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: function(value) {
+                            return value.toLocaleString('ru-RU') + ' ₽';
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Сумма в ₽'
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+</script>
+
+

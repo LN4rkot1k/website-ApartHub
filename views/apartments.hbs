@@ -1,0 +1,241 @@
+<section class="apartments-page">
+    {{#if complex}}
+    <div class="complex-info">
+        <img src="{{complex.complex_imageurls.[0]}}" alt="{{complex.complex_title}}">
+        <div class="complex-details">
+            <h2>{{complex.complex_title}}</h2>
+            <p>{{complex.complex_address}}</p>
+            <p>Сдан в {{complex.construction_year}} году</p>
+        </div>
+    </div>
+
+    <div class="complex-extra">
+        {{#if staticMapUrl}}
+        <div class="complex-map-info">
+            <a href="#map-section">
+                <img src="{{staticMapUrl}}" alt="Map" class="map-icon" style="width:100%; max-width:350px; height:100%; max-height:250px;">
+                <p>Посмотреть на карте</p>
+            </a>
+        </div>
+        {{/if}}
+
+        <div class="complex-extra-info">
+            <p><strong>Расположение: </strong>{{complex.complex_address}}</p>
+            <p><strong>Тип дома: </strong>{{complex.house_type}}</p>
+            <p><strong>Класс жилья: </strong>{{complex.housing_class}}</p>
+        </div>
+    </div>
+    {{/if}}
+
+    <div class="apartments-container">
+        {{!-- Блок с фильтрами --}}
+        <div class="apartments-filter">
+        <form id="filterForm">
+            <label for="complex">Жилой комплекс:</label>
+            <select name="complex" id="complex">
+            <option value="all">Нет фильтра</option>
+            <option value="none">Без комплекса</option>
+            {{#each complexes}}
+            <option value="{{this.complex_id}}">{{this.complex_title}}</option>
+            {{/each}}
+            </select>
+
+            <div class="filter-row">
+            <label for="priceMin">Цена от:
+                <input type="number" id="priceMin" name="priceMin">
+            </label>
+            <label for="priceMax">Цена до:
+                <input type="number" id="priceMax" name="priceMax">
+            </label>
+            </div>
+
+            <label for="rooms">Количество комнат:</label>
+            <select name="rooms" id="rooms">
+            <option value="">Любое</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4+</option>
+            </select>
+
+            <div class="filter-row">
+            <label for="areaMin">Площадь от:
+                <input type="number" id="areaMin" name="areaMin">
+            </label>
+            <label for="areaMax">Площадь до:
+                <input type="number" id="areaMax" name="areaMax">
+            </label>
+            </div>
+
+            <div class="filter-row">
+            <label for="floorMin">Этаж от:
+                <input type="number" id="floorMin" name="floorMin">
+            </label>
+            <label for="floorMax">Этаж до:
+                <input type="number" id="floorMax" name="floorMax">
+            </label>
+            </div>
+
+            <button type="submit">Применить</button>
+            <button type="button" id="resetButton">Сбросить</button>
+            <button type="button" id="backBtn">Вернуться</button>
+        </form>
+        </div>
+
+
+        {{!-- Блок с квартирами --}}
+        <div class="apartments-list" id="apartmentsList">
+            {{#each apartments}}
+            <a href="/apartment/{{this.apart_id}}" class="apartment-card">
+                <img class="apartment-image" src="{{this.apart_imageurls.[0]}}" alt="Квартира">
+                <div class="apartment-info">
+                    <h4><strong>{{formatPrice this.apart_price}} ₽</strong></h4>
+                    <h5><strong>{{this.apart_rooms}}-комнатная квартира</strong></h5>
+                    <div class="apartment-extra-information">
+                        <p class="apartment-address">{{this.apart_address}}</p>
+                        <p><strong>Площадь: </strong>{{this.apart_square}} м²</p>
+                        <p><strong>Этаж: </strong>{{this.apart_floor}}</p>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+
+    {{#if mapCoordinates}}
+    <div id="map-section" class="map-container">
+        <h3><strong>Расположение на карте</strong></h3>
+        <div id="map" style="width:100%; height:400px"></div>
+        <script type="text/javascript" src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+        <script type="text/javascript">
+            ymaps.ready(function () {
+                var myMap = new ymaps.Map("map", {
+                    center: [{{mapCoordinates.latitude}}, {{mapCoordinates.longitude}}],
+                    zoom: 15
+                });
+
+                var myPlacemark = new ymaps.Placemark([{{mapCoordinates.latitude}}, {{mapCoordinates.longitude}}], {
+                    balloonContent: '{{complex.complex_title}}'
+                });
+
+                myMap.geoObjects.add(myPlacemark);
+            });
+        </script>
+    </div>
+    {{/if}}
+</section>
+
+<script>
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = '/';
+    });
+
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+
+    async function loadApartments(params = '') {
+        try {
+            const res = await fetch('/filter-apartments?' + params);
+            const data = await res.json();
+
+            const container = document.getElementById('apartmentsList');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p>Нет подходящих квартир</p>';
+                return;
+            }
+
+            data.forEach(apart => {
+                const card = document.createElement('a');
+                card.href = `/apartment/${apart.apart_id}`;
+                card.className = 'apartment-card';
+                card.innerHTML = `
+                    <img class="apartment-image" src="${apart.apart_imageurls[0]}" alt="Квартира">
+                    <div class="apartment-info">
+                        <h4><strong>${formatPrice(apart.apart_price)} ₽</strong></h4>
+                        <h5><strong>${apart.apart_rooms}-комнатная квартира</strong></h5>
+                        <div class="apartment-extra-information">
+                            <p class="apartment-address">${apart.apart_address}</p>
+                            <p><strong>Площадь: </strong>${apart.apart_square} м²</p>
+                            <p><strong>Этаж: </strong>${apart.apart_floor}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        } catch (err) {
+            console.error('Ошибка при загрузке данных:', err);
+        }
+    }
+
+    function limitInput(input, maxDigits, maxValue) {
+        input.addEventListener('input', function () {
+            let val = this.value.replace(/\D/g, '');
+            val = val.replace(/^0+/, '');
+            if (val.length > maxDigits) val = val.slice(0, maxDigits);
+            if (parseInt(val) > maxValue) val = maxValue;
+            this.value = val;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadApartments();
+
+        // Ограничения на ввод
+        const priceMin = document.getElementById('priceMin');
+        const priceMax = document.getElementById('priceMax');
+        const areaMin = document.getElementById('areaMin');
+        const areaMax = document.getElementById('areaMax');
+        const floorMin = document.getElementById('floorMin');
+        const floorMax = document.getElementById('floorMax');
+
+        limitInput(priceMin, 9, 999999999);
+        limitInput(priceMax, 9, 999999999);
+        limitInput(areaMin, 3, 999);
+        limitInput(areaMax, 3, 999);
+        limitInput(floorMin, 2, 99);
+        limitInput(floorMax, 2, 99);
+
+        document.getElementById('filterForm').addEventListener('submit', async function (e) {
+            const errors = [];
+
+            const priceMinVal = parseInt(priceMin.value) || 0;
+            const priceMaxVal = parseInt(priceMax.value) || 0;
+            const areaMinVal = parseInt(areaMin.value) || 0;
+            const areaMaxVal = parseInt(areaMax.value) || 0;
+            const floorMinVal = parseInt(floorMin.value) || 0;
+            const floorMaxVal = parseInt(floorMax.value) || 0;
+
+            if (priceMin.value && priceMax.value && priceMinVal > priceMaxVal) {
+                errors.push('Цена "от" не может быть больше "до".');
+            }
+            if (areaMin.value && areaMax.value && areaMinVal > areaMaxVal) {
+                errors.push('Площадь "от" не может быть больше "до".');
+            }
+            if (floorMin.value && floorMax.value && floorMinVal > floorMaxVal) {
+                errors.push('Этаж "от" не может быть больше "до".');
+            }
+
+            if (errors.length > 0) {
+                e.preventDefault();
+                alert(errors.join('\n'));
+                return;
+            }
+
+            e.preventDefault();
+            const formData = new FormData(this);
+            const params = new URLSearchParams(formData).toString();
+            await loadApartments(params);
+        });
+
+        document.getElementById('resetButton').addEventListener('click', async function () {
+            const form = document.getElementById('filterForm');
+            form.reset();
+            await loadApartments();
+        });
+    });
+</script>
+
+
